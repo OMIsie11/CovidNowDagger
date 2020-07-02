@@ -8,11 +8,13 @@ import com.github.mikephil.charting.data.PieEntry
 import io.github.omisie11.coronatrackerplayground.data.local.model.GlobalSummary
 import io.github.omisie11.coronatrackerplayground.data.repository.GlobalSummaryRepository
 import io.github.omisie11.coronatrackerplayground.vo.FetchResult
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class GlobalViewModel(private val repository: GlobalSummaryRepository) : ViewModel() {
+class GlobalViewModel @Inject constructor(private val repository: GlobalSummaryRepository) :
+    ViewModel() {
 
     private val globalSummary = MutableLiveData<GlobalSummary>()
     private val globalPieChartData = MutableLiveData<List<PieEntry>>()

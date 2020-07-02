@@ -1,5 +1,6 @@
 package io.github.omisie11.coronatrackerplayground.ui.local
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.Gravity
@@ -9,26 +10,42 @@ import android.view.ViewGroup
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.snackbar.Snackbar
+import io.github.omisie11.coronatrackerplayground.MainApplication
 import io.github.omisie11.coronatrackerplayground.R
 import io.github.omisie11.coronatrackerplayground.databinding.FragmentLocalBinding
+import io.github.omisie11.coronatrackerplayground.ui.MainActivity
 import io.github.omisie11.coronatrackerplayground.util.PREFS_KEY_CHOSEN_LOCATION
 import io.github.omisie11.coronatrackerplayground.vo.FetchResult
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.compound_single_stat.view.*
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
 
 class LocalFragment : Fragment() {
 
     private var _binding: FragmentLocalBinding? = null
     private val binding get() = _binding!!
 
-    private val localViewModel by sharedViewModel<LocalViewModel>()
-    private val sharedPrefs: SharedPreferences by inject()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var sharedPrefs: SharedPreferences
+
+    // ViewModel shared between Local and Settings Fragments
+    private val localViewModel by viewModels<LocalViewModel>(
+        { activity as MainActivity }) { viewModelFactory }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as MainApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -43,6 +60,7 @@ class LocalFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         styleGlobalPieChart()
+
         binding.textCountryTitle.text = getChosenLocation()
 
         localViewModel.getSummary().observe(viewLifecycleOwner, Observer { summary ->

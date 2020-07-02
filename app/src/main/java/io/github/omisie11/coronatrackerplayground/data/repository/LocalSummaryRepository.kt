@@ -10,11 +10,14 @@ import io.github.omisie11.coronatrackerplayground.data.remote.BASE_COUNTRY_URL
 import io.github.omisie11.coronatrackerplayground.data.remote.model.LocalSummaryRemote
 import io.github.omisie11.coronatrackerplayground.util.PREFS_KEY_CHOSEN_LOCATION
 import io.github.omisie11.coronatrackerplayground.util.PREFS_LAST_REFRESH_LOCAL_SUMMARY
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import retrofit2.Response
 
-class LocalSummaryRepository(
+@Singleton
+class LocalSummaryRepository @Inject constructor(
     private val apiService: ApiService,
     private val localSummaryDao: LocalSummaryDao,
     private val sharedPrefs: SharedPreferences

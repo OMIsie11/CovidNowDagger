@@ -1,24 +1,43 @@
 package io.github.omisie11.coronatrackerplayground.ui.settings
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
+import io.github.omisie11.coronatrackerplayground.MainApplication
 import io.github.omisie11.coronatrackerplayground.R
+import io.github.omisie11.coronatrackerplayground.ui.MainActivity
 import io.github.omisie11.coronatrackerplayground.ui.local.LocalViewModel
 import io.github.omisie11.coronatrackerplayground.util.PREFS_KEY_CHOSEN_LOCATION
-import org.koin.android.ext.android.inject
-import org.koin.androidx.viewmodel.ext.android.sharedViewModel
-import org.koin.androidx.viewmodel.ext.android.viewModel
+import javax.inject.Inject
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    private val sharedPrefs: SharedPreferences by inject()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    @Inject
+    lateinit var sharedPrefs: SharedPreferences
+
+    @Inject
+    lateinit var countriesViewModel: CountriesViewModel
+
+    // ViewModel shared between Local and Settings Fragments
+    private val localViewModel by viewModels<LocalViewModel>(
+        { activity as MainActivity }) { viewModelFactory }
+
     private lateinit var sharedPrefsListener: SharedPreferences.OnSharedPreferenceChangeListener
-    private val countriesViewModel by viewModel<CountriesViewModel>()
-    private val localViewModel by sharedViewModel<LocalViewModel>()
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as MainApplication).appComponent.inject(this)
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.app_preferences, rootKey)

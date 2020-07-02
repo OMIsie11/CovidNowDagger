@@ -4,39 +4,32 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.jakewharton.threetenabp.AndroidThreeTen
-import io.github.omisie11.coronatrackerplayground.di.countriesModule
-import io.github.omisie11.coronatrackerplayground.di.globalModule
-import io.github.omisie11.coronatrackerplayground.di.localModule
-import io.github.omisie11.coronatrackerplayground.di.mainModule
-import io.github.omisie11.coronatrackerplayground.di.networkModule
+import io.github.omisie11.coronatrackerplayground.di.AppComponent
+import io.github.omisie11.coronatrackerplayground.di.DaggerAppComponent
 import io.github.omisie11.coronatrackerplayground.util.CrashReportingTree
 import io.github.omisie11.coronatrackerplayground.util.PREFS_KEY_APP_THEME
-import org.koin.android.ext.android.get
-import org.koin.android.ext.koin.androidContext
-import org.koin.android.ext.koin.androidFileProperties
-import org.koin.android.ext.koin.androidLogger
-import org.koin.core.context.startKoin
+import javax.inject.Inject
 import timber.log.Timber
 
 class MainApplication : Application() {
 
+    @Inject
+    lateinit var sharedPrefs: SharedPreferences
+
+    val appComponent: AppComponent by lazy {
+        DaggerAppComponent.factory().create(this)
+    }
+
     override fun onCreate() {
+        appComponent.inject(this)
         super.onCreate()
 
         AndroidThreeTen.init(this)
-
-        startKoin {
-            androidLogger()
-            androidContext(this@MainApplication)
-            androidFileProperties()
-            modules(listOf(mainModule, networkModule, globalModule, localModule, countriesModule))
-        }
 
         // Logging in Debug build, in release log only crashes
         if (BuildConfig.DEBUG) Timber.plant(Timber.DebugTree()) else
             Timber.plant(CrashReportingTree())
 
-        val sharedPrefs: SharedPreferences = get()
         AppCompatDelegate.setDefaultNightMode(
             translateValueToDayNightMode(
                 sharedPrefs.getBoolean(PREFS_KEY_APP_THEME, false)

@@ -6,11 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.omisie11.coronatrackerplayground.data.repository.CountriesRepository
 import io.github.omisie11.coronatrackerplayground.vo.FetchResult
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class CountriesViewModel(private val repository: CountriesRepository) : ViewModel() {
+class CountriesViewModel @Inject constructor(private val repository: CountriesRepository) :
+    ViewModel() {
 
     private val countriesNamesList = MutableLiveData<List<String>>()
     private val isDataFetching: LiveData<Boolean> = repository.getFetchingStatus()

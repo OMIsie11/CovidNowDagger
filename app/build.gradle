@@ -29,6 +29,10 @@ android {
         targetCompatibility = 1.8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -72,9 +76,9 @@ dependencies {
     implementation "androidx.room:room-runtime:2.2.4"
     implementation "androidx.room:room-ktx:2.2.4"
     kapt "androidx.room:room-compiler:2.2.4"
-    // Koin Android
-    implementation "org.koin:koin-android:2.1.4"
-    implementation "org.koin:koin-androidx-viewmodel:2.1.4"
+    // Dagger
+    implementation 'com.google.dagger:dagger:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.27'
     // Timber
     implementation "com.jakewharton.timber:timber:4.7.1"
     // ThreeTenABP

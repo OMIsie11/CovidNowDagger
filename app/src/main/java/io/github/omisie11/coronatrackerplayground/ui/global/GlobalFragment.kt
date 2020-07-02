@@ -1,5 +1,6 @@
 package io.github.omisie11.coronatrackerplayground.ui.global
 
+import android.content.Context
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -9,22 +10,37 @@ import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.google.android.material.snackbar.Snackbar
+import io.github.omisie11.coronatrackerplayground.MainApplication
 import io.github.omisie11.coronatrackerplayground.R
 import io.github.omisie11.coronatrackerplayground.databinding.FragmentGlobalBinding
 import io.github.omisie11.coronatrackerplayground.vo.FetchResult
+import javax.inject.Inject
 import kotlinx.android.synthetic.main.compound_single_stat.view.*
-import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class GlobalFragment : Fragment() {
 
     private var _binding: FragmentGlobalBinding? = null
     private val binding get() = _binding!!
 
-    private val globalViewModel by viewModel<GlobalViewModel>()
+    @Inject
+    lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private lateinit var globalViewModel: GlobalViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as MainApplication).appComponent.inject(this)
+
+        globalViewModel = ViewModelProvider(this, viewModelFactory)
+            .get(GlobalViewModel::class.java)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,9 +92,15 @@ class GlobalFragment : Fragment() {
             globalViewModel.refreshGlobalSummary(forceRefresh = true)
         }
 
-        binding.statConfirmed.setOnClickListener { binding.pieChartGlobal.highlightValue(0f, 0) }
-        binding.statRecovered.setOnClickListener { binding.pieChartGlobal.highlightValue(1f, 0) }
-        binding.statDeaths.setOnClickListener { binding.pieChartGlobal.highlightValue(2f, 0) }
+        binding.statConfirmed.setOnClickListener {
+            binding.pieChartGlobal.highlightValue(0f, 0)
+        }
+        binding.statRecovered.setOnClickListener {
+            binding.pieChartGlobal.highlightValue(1f, 0)
+        }
+        binding.statDeaths.setOnClickListener {
+            binding.pieChartGlobal.highlightValue(2f, 0)
+        }
     }
 
     override fun onResume() {
@@ -118,7 +140,8 @@ class GlobalFragment : Fragment() {
 
     private fun showErrorSnackbar(text: String) {
         val snackbar = Snackbar.make(binding.swipeRefresh, text, Snackbar.LENGTH_LONG)
-        val layoutParams = snackbar.view.layoutParams as CoordinatorLayout.LayoutParams
+        val layoutParams =
+            snackbar.view.layoutParams as CoordinatorLayout.LayoutParams
         layoutParams.apply {
             anchorId = R.id.bottom_navigation
             layoutParams.anchorGravity = Gravity.TOP

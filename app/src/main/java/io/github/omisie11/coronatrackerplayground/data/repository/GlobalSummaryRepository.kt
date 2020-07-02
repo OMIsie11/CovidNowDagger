@@ -8,11 +8,14 @@ import io.github.omisie11.coronatrackerplayground.data.mappers.mapToLocalSummary
 import io.github.omisie11.coronatrackerplayground.data.remote.ApiService
 import io.github.omisie11.coronatrackerplayground.data.remote.model.GlobalSummaryRemote
 import io.github.omisie11.coronatrackerplayground.util.PREFS_LAST_REFRESH_GLOBAL_SUMMARY
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import retrofit2.Response
 
-class GlobalSummaryRepository(
+@Singleton
+class GlobalSummaryRepository @Inject constructor(
     private val apiService: ApiService,
     private val globalSummaryDao: GlobalSummaryDao,
     sharedPrefs: SharedPreferences

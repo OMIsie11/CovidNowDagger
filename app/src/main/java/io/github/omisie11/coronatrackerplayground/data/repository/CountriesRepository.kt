@@ -7,10 +7,13 @@ import io.github.omisie11.coronatrackerplayground.data.mappers.mapToLocalCountry
 import io.github.omisie11.coronatrackerplayground.data.remote.ApiService
 import io.github.omisie11.coronatrackerplayground.data.remote.model.CountriesRemote
 import io.github.omisie11.coronatrackerplayground.util.PREFS_LAST_REFRESH_COUNTRIES
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Response
 
-class CountriesRepository(
+@Singleton
+class CountriesRepository @Inject constructor(
     private val apiService: ApiService,
     private val countriesDao: CountriesDao,
     sharedPrefs: SharedPreferences

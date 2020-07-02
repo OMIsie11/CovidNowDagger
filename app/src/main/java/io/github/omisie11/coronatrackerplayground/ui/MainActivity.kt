@@ -8,19 +8,24 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
+import io.github.omisie11.coronatrackerplayground.MainApplication
 import io.github.omisie11.coronatrackerplayground.R
 import io.github.omisie11.coronatrackerplayground.databinding.ActivityMainBinding
 import io.github.omisie11.coronatrackerplayground.util.PREFS_KEY_APP_THEME
-import org.koin.android.ext.android.inject
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val sharedPrefs: SharedPreferences by inject()
+    @Inject
+    lateinit var sharedPrefs: SharedPreferences
+
     private lateinit var sharedPrefsListener: SharedPreferences.OnSharedPreferenceChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        (applicationContext as MainApplication).appComponent.inject(this)
+
         setTheme(R.style.Theme_CovidTracker)
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)

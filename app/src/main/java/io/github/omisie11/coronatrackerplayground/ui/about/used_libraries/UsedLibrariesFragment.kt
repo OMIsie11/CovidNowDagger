@@ -1,5 +1,6 @@
 package io.github.omisie11.coronatrackerplayground.ui.about.used_libraries
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -10,25 +11,35 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.Types
+import io.github.omisie11.coronatrackerplayground.MainApplication
 import io.github.omisie11.coronatrackerplayground.R
 import io.github.omisie11.coronatrackerplayground.databinding.FragmentUsedLibrariesBinding
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.koin.android.ext.android.inject
 
 class UsedLibrariesFragment : Fragment(), UsedLibrariesAdapter.OnItemClickListener {
 
     private var _binding: FragmentUsedLibrariesBinding? = null
     private val binding get() = _binding!!
 
+    @Inject
+    lateinit var moshi: Moshi
+
     private lateinit var viewAdapter: UsedLibrariesAdapter
-    private val moshi: Moshi by inject()
+
     private val usedLibsJob = Job()
     private val uiScope = CoroutineScope(Dispatchers.Main + usedLibsJob)
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        (requireActivity().application as MainApplication).appComponent.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

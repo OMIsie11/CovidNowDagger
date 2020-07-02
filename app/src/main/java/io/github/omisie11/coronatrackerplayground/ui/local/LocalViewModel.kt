@@ -8,11 +8,13 @@ import com.github.mikephil.charting.data.PieEntry
 import io.github.omisie11.coronatrackerplayground.data.local.model.LocalSummary
 import io.github.omisie11.coronatrackerplayground.data.repository.LocalSummaryRepository
 import io.github.omisie11.coronatrackerplayground.vo.FetchResult
+import javax.inject.Inject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class LocalViewModel(private val repository: LocalSummaryRepository) : ViewModel() {
+class LocalViewModel @Inject constructor(private val repository: LocalSummaryRepository) :
+    ViewModel() {
 
     private val localSummary = MutableLiveData<LocalSummary>()
     private val localPieChartData = MutableLiveData<List<PieEntry>>()
