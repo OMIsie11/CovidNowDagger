@@ -1,13 +1,13 @@
-# CovidNow Android App
-Simple application for tracking Covid-19 info, stay safe 😷
-### Get latest app version from this repository [releases](https://github.com/OMIsie11/CoronaTracker/releases) section 🎁
+# CovidNow - Dagger
 
-![covid_app_screenshots](https://user-images.githubusercontent.com/31706606/77448124-bc7b5780-6df0-11ea-8519-4075774296a9.png)
+## 🚧🚧🚧 This is a sample of CovidNow refactored to use Dagger2 instead of Koin for dependency injection.
+## Repo of original application is live at [CovidNow](https://github.com/OMIsie11/CovidNow), where You will find original app with releases section. 
+
 
 ## App is using:
 * Kotlin (Coroutines + Flow)💎
 * [COVID-19 API](https://github.com/mathdroid/covid-19-api) 📈
-* [KOIN](https://insert-koin.io)
+* ~~[KOIN](https://insert-koin.io)~~ [Dagger2](https://github.com/google/dagger)
 * [Retrofit](https://square.github.io/retrofit/)
 * [Moshi](https://github.com/square/moshi)
 * [ktlint](https://ktlint.github.io) and [ktlint gradle plugin](https://github.com/jlleitschuh/ktlint-gradle)
